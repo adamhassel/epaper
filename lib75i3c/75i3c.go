@@ -69,6 +69,7 @@ func Exit() {
 	rpio.Close()
 }
 
+// Reset the display
 func Reset() {
 	resetPin.Write(rpio.High)
 	time.Sleep(200 * time.Millisecond)
@@ -78,6 +79,7 @@ func Reset() {
 	time.Sleep(200 * time.Millisecond)
 }
 
+// SendCommand sends a command to the display
 func SendCommand(reg byte) {
 	dcPin.Write(rpio.Low)
 	csPin.Write(rpio.Low)
@@ -85,6 +87,7 @@ func SendCommand(reg byte) {
 	csPin.Write(rpio.High)
 }
 
+// SendData transmits a byte of data to the display
 func SendData(data byte) {
 	dcPin.Write(rpio.High)
 	csPin.Write(rpio.Low)
@@ -92,6 +95,7 @@ func SendData(data byte) {
 	csPin.Write(rpio.High)
 }
 
+// WaitIdle waits until the display is no longer busy
 func WaitIdle() {
 	for busyPin.Read() == rpio.High {
 		time.Sleep(10 * time.Millisecond)
@@ -99,6 +103,7 @@ func WaitIdle() {
 	time.Sleep(200 * time.Millisecond)
 }
 
+// TurnOnDisplay turns the display on
 func TurnOnDisplay() {
 	SendCommand(0x22)
 	SendData(0xC7) // Load LUT from MCU (0x32)
@@ -107,6 +112,7 @@ func TurnOnDisplay() {
 	WaitIdle()
 }
 
+// Initialize the display.
 func Initialize() {
 	Reset()
 	SendCommand(SWRESET)
@@ -211,12 +217,13 @@ func DisplayImage(black image.Image, red image.Image) {
 	}
 }
 
+// Sleep puts the display into deep sleep mode
 func Sleep() {
 	SendCommand(DEEPSLEEP)
 	SendData(0x01)
 }
 
-// Convert converts the input image into a ready-to-display byte buffer.
+// Convert an image.Image into a ready-to-display byte buffer.
 func Convert(img image.Image) []byte {
 	var byteToSend byte = 0x00
 	var bgColor = 1
