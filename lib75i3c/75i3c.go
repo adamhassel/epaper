@@ -6,7 +6,7 @@ import (
 	"image/color"
 	"time"
 
-	"github.com/stianeikeland/go-rpio"
+	"github.com/stianeikeland/go-rpio/v4"
 )
 
 const (
@@ -239,8 +239,8 @@ func Convert(img image.Image) []byte {
 			}
 
 			if bit == 1 {
-				//byteToSend |= 0x80 >> (uint32(i) % 8)
-				byteToSend |= 0xFF >> (uint32(i) % 8)
+				byteToSend |= 0x80 >> (uint32(i) % 8)
+				//byteToSend |= 0xFF >> (uint32(i) % 8)
 			}
 
 			if i%8 == 7 {
